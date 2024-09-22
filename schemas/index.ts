@@ -1,5 +1,8 @@
 import * as z from "zod";
 
+// Function to validate name
+const nameValidation = z.string().min(1).trim().nullable();
+
 // Function to check if email is from popular or government/educational providers
 const popularEmailProviders = [
   "gmail.com",
@@ -15,13 +18,8 @@ const emailValidation = z
   .refine(
     (email) => {
       const domain = email.split("@")[1];
-      const topLevelDomain = domain
-        .split(".")
-        .slice(-1)[0]; // Get the last part of the domain (e.g., .gov, .com)
-      const secondLevelDomain = domain
-        .split(".")
-        .slice(-2)
-        .join("."); // For domains like ac.in
+      const topLevelDomain = domain.split(".").slice(-1)[0]; // Get the last part of the domain (e.g., .gov, .com)
+      const secondLevelDomain = domain.split(".").slice(-2).join("."); // For domains like ac.in
 
       // Allow if it's from a popular provider or has a valid government/education domain
       return (
@@ -47,8 +45,7 @@ const passwordValidation = z
       if (/[a-z]/.test(password)) strength++; // contains lowercase letter
       if (/[A-Z]/.test(password)) strength++; // contains uppercase letter
       if (/\d/.test(password)) strength++; // contains number
-      if (/[^a-zA-Z0-9]/.test(password))
-        strength++; // contains special character
+      if (/[^a-zA-Z0-9]/.test(password)) strength++; // contains special character
 
       return strength >= 2; // Minimum criteria
     },
@@ -57,6 +54,13 @@ const passwordValidation = z
         "Password must have at least 8 characters and include both letters and numbers",
     }
   );
+
+// Create a Zod schema for registration validation
+export const RegistrationSchema = z.object({
+  name: nameValidation,
+  email: emailValidation,
+  password: passwordValidation,
+});
 
 // Create a Zod schema for login validation
 export const LoginSchema = z.object({
