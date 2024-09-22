@@ -14,10 +14,14 @@ const allowedDomains = ["gov", "edu", "ac.in"]; // Government or educational dom
 
 const emailValidation = z
   .string()
-  .email()
+  .email({ message: "Please enter a valid email address" }) // Use built-in email validation first
   .refine(
     (email) => {
-      const domain = email.split("@")[1];
+      // Check if email contains '@' before attempting to split
+      const parts = email.split("@");
+      if (parts.length < 2) return false; // Invalid if no '@' symbol or missing domain
+
+      const domain = parts[1]; // Get the domain part of the email
       const topLevelDomain = domain.split(".").slice(-1)[0]; // Get the last part of the domain (e.g., .gov, .com)
       const secondLevelDomain = domain.split(".").slice(-2).join("."); // For domains like ac.in
 
@@ -29,7 +33,7 @@ const emailValidation = z
       );
     },
     {
-      message: "Invalid email format.",
+      message: "Please enter a valid email address.",
     }
   );
 
