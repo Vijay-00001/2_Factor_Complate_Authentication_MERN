@@ -42,6 +42,9 @@ export const registration = async (
       success: "Email Sent!",
     };
   }
+  return {
+    error: "Something went wrong!",
+  };
 };
 
 export default registration;
