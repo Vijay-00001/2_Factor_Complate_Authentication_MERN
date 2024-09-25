@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import React, { useCallback, useState, useTransition } from "react";
@@ -35,10 +34,12 @@ export const LoginForm =
     const onSubmit = useCallback((values: z.infer<typeof LoginSchema>) => {
       startTransition(() => {
         login(values).then((res) => {
-          if (res.error) {
-            setError(res.error);
-          } else if (res.success) {
-            setSuccess(res.success);
+          if (res !== undefined) {
+            if (res.error) {
+              setError(res.error);
+            } else if (res.success) {
+              setSuccess(res.success);
+            }
           }
         });
       });
