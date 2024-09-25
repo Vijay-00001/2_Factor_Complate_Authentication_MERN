@@ -15,10 +15,16 @@ import FormError from "@/components/form-error";
 import FormSuccess from "@/components/form-success";
 import { login } from "@/actions/login";
 import FromInput from "@/components/auth/form-input";
+import { useSearchParams } from "next/navigation";
 
 export const LoginForm =
   // eslint-disable-next-line react/display-name
   React.memo(() => {
+    const searchParams = useSearchParams();
+    const urlError =
+      searchParams.get("error") === "OAuthAccountNotLinked"
+        ? "Email alrady in used with other provider!"
+        : "";
     const [error, setError] = useState<string | undefined>("");
     const [success, setSuccess] = useState<string | undefined>("");
     const [isPending, startTransition] = useTransition();
@@ -71,7 +77,7 @@ export const LoginForm =
                 type="password"
               />
             </div>
-            <FormError message={error} />
+            <FormError message={error || urlError} />
             <FormSuccess message={success} />
             <Button disabled={isPending} className="w-full" type="submit">
               Login
